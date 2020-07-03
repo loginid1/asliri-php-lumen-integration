@@ -1,10 +1,16 @@
-# PHP (Laravel/Lumen) Integration
+# PHP (laravel/lumen) OIDC Integration
 
-This is an integration sample written in PHP using the Lumen micro-framework.
+This is an integration sample written in PHP using the [Lumen](https://lumen.laravel.com/) micro-framework. The core logic of this application is at the [AuthController](app/Http/Controllers/AuthController.php). There you will find the setup logic for [league/oauth2-client](https://github.com/thephpleague/oauth2-client) and the flow for making login calls and the setup for the callback endpoint.
 
-## Setup
+## Requirements
 
-#### Local setup
+- `PHP >= 7.3`
+- `Composer`
+- `SQLite`
+- `Git`
+
+
+## Local setup
 
 To run this project locally in your development environment, you will have to use the `localhost` or `127.0.0.1`. If you are running multiple projects, consider accessing the `hosts` file to add a new line with your project URI. For this example, we are using the `php.integration.localhost` URI. 
 
@@ -21,11 +27,11 @@ Our `hosts` file will look like the following:
 127.0.0.1       php.integration.localhost
 ```
 
-#### Filling the environment variables
+## Filling the environment variables
 
 To configure the environment you will need to make a copy of `.env.example` file, rename it to `.env` and fill all the environment variables. To have a better understanding of the variables please refer to the documentation.
 
-###### The `LOGIN_URI` variable
+### The `LOGIN_URI` variable
 
 This is the URI that will be used to communicate with Asliri servers, for this example, we are using the development servers, therefore we are going to use the `https://sandbox.api.auth.asliri.id/` URI.
 
@@ -33,7 +39,7 @@ This is the URI that will be used to communicate with Asliri servers, for this e
 LOGIN_URI=https://sandbox.api.auth.asliri.id/
 ```
 
-###### The `LOGIN_REDIRECT_URI` variable
+### The `LOGIN_REDIRECT_URI` variable
 
 When the user authenticates themselves with Asliri (similar to authenticating with Google), Asliri will need to pass back control and information back to your servers. The Callback URL is the path that will be used to accomplish this and you will need to define it.
 
@@ -45,7 +51,7 @@ LOGIN_REDIRECT_URI=http://php.integration.localhost:8000/callback
 
 **Note:** Save this redirect URI, you will use it to create your client credentials later on. 
 
-###### The `LOGIN_SCOPES` variable
+### The `LOGIN_SCOPES` variable
 
 Add the `openid` scope to have access to the JWT. If you need access to the refresh token also add the `offline` scope.
 
@@ -53,7 +59,7 @@ Add the `openid` scope to have access to the JWT. If you need access to the refr
 LOGIN_SCOPES=openid
 ```
 
-###### The `LOGIN_APPID` and `LOGIN_APPSECRET` variables
+### The `LOGIN_APPID` and `LOGIN_APPSECRET` variables
 
 In order to receive access to integrate Asliri, you will need to create your client credentials. This is similar to the credentials you would create with Google to use Google authentication. This allows you to use Asliri services in a secure, authenticated fashion.
 
