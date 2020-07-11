@@ -2,6 +2,8 @@
 
 This is an integration sample written in PHP using the [Lumen](https://lumen.laravel.com/) micro-framework. The core logic of this application is at the [AuthController](app/Http/Controllers/AuthController.php). There you will find the setup logic for [league/oauth2-client](https://github.com/thephpleague/oauth2-client) and the flow for making login calls and the setup for the callback endpoint.
 
+[![asciicast](https://asciinema.org/a/346777.svg)](https://asciinema.org/a/346777)
+
 ## Requirements
 
 - `PHP >= 7.3`
@@ -9,14 +11,21 @@ This is an integration sample written in PHP using the [Lumen](https://lumen.lar
 - `SQLite`
 - `Git`
 
+To learn more about how to download, install and configure these requirements, please refer to our [windows](.docs/WindowsSetup.md) environment setup guide.
 
 ## Local setup
 
-To run this project locally in your development environment, you will have to use the `localhost` or `127.0.0.1`. If you are running multiple projects, consider accessing the `hosts` file to add a new line with your project URI. For this example, we are using the `php.integration.localhost` URI. 
+To run this project locally in your development environment, you will have to use `localhost` or `127.0.0.1`. For this project, we are using `localhost` URI.
 
-**Note:** When using a custom URIs for your local projects, you will have to use the `.localhost` suffix.
+**Optional configuration:**
 
-Our `hosts` file will look like the following:
+If you are running multiple projects, consider accessing the `hosts` file to add a custom URI setting for your project.
+
+**Linux and macOS:** `/etc/hosts`
+
+**Windows:** `C:\windows\system32\drivers\etc\hosts`
+
+The `hosts` file will look like the following:
 ```
 # Default Settings
 127.0.0.1       localhost
@@ -27,31 +36,71 @@ Our `hosts` file will look like the following:
 127.0.0.1       php.integration.localhost
 ```
 
+**Note:** When using a custom URIs for your local projects, you will have to use `.localhost` suffix.
+
+#### Clone the project
+
+The first step to getting this project up and running is to clone this repository. Once you cloned the project, you will need to `cd` into the project folder.
+
+```
+$ git clone https://github.com/loginid1/php-lumen-integration.git
+$ cd php-lumen-integration
+```
+
+#### Install dependencies
+
+This project utilizes [Composer](https://getcomposer.org/) to manage its dependencies. So, before using this project, make sure you have Composer installed on your machine.
+
+```
+$ composer install
+```
+
+#### Fill the environment variables
+
+To configure environment variables you will need to rename the `.env.example` file to `.env` and fill all the environment variables. To have a better understanding of the variables please refer to this [section](#filling-the-environment-variables).
+
+```
+$ mv .env.example .env
+```
+
+#### Create the database
+
+Another requirement to run this project is to have [SQLite](https://www.sqlite.org/) installed. So, before using this project, make sure you have SQLite installed on your machine.
+
+```
+$ touch database/database.sqlite
+$ php artisan migrate
+```
+
+#### Execute the project
+
+Now that you have depencencies installed, database configured and environment variables filled, you can run the project and test the OIDC flow unsing the PHP laravel/lumen project.
+
+```
+$ php -S localhost:8000 -t public
+```
+
 ## Filling the environment variables
 
-To configure the environment you will need to make a copy of `.env.example` file, rename it to `.env` and fill all the environment variables. To have a better understanding of the variables please refer to the documentation.
+#### The `LOGIN_URI` variable
 
-### The `LOGIN_URI` variable
-
-This is the URI that will be used to communicate with Asliri servers, for this example, we are using the development servers, therefore we are going to use the `https://sandbox.api.auth.asliri.id/` URI.
+This is the URI that will be used to communicate with LoginID's servers, for this example, we are using the development servers, therefore we are going to use the `https://sandbox-apse1.api.loginid.io` URI.
 
 ```
-LOGIN_URI=https://sandbox.api.auth.asliri.id/
+LOGIN_URI=https://sandbox-apse1.api.loginid.io
 ```
 
-### The `LOGIN_REDIRECT_URI` variable
+#### The `LOGIN_REDIRECT_URI` variable
 
-When the user authenticates themselves with Asliri (similar to authenticating with Google), Asliri will need to pass back control and information back to your servers. The Callback URL is the path that will be used to accomplish this and you will need to define it.
-
-Because we are using the custom URI our variable will look like the following:
+When the user authenticates themselves with LoginID (similar to authenticating with Google), LoginID will need to pass back control and information back to your servers. The Callback URL is the path that will be used to accomplish this and you will need to define it.
 
 ```
-LOGIN_REDIRECT_URI=http://php.integration.localhost:8000/callback
+LOGIN_REDIRECT_URI=http://localhost:8000/callback
 ```
 
 **Note:** Save this redirect URI, you will use it to create your client credentials later on. 
 
-### The `LOGIN_SCOPES` variable
+#### The `LOGIN_SCOPES` variable
 
 Add the `openid` scope to have access to the JWT. If you need access to the refresh token also add the `offline` scope.
 
@@ -59,15 +108,15 @@ Add the `openid` scope to have access to the JWT. If you need access to the refr
 LOGIN_SCOPES=openid
 ```
 
-### The `LOGIN_APPID` and `LOGIN_APPSECRET` variables
+#### The `LOGIN_APPID` and `LOGIN_APPSECRET` variables
 
-In order to receive access to integrate Asliri, you will need to create your client credentials. This is similar to the credentials you would create with Google to use Google authentication. This allows you to use Asliri services in a secure, authenticated fashion.
+In order to receive access to integrate LoginID, you will need to create your client credentials. This is similar to the credentials you would create with Google to use Google authentication. This allows you to use LoginID services in a secure, authenticated fashion.
 
 To obtain the client keys you will need to perform the following steps:
 
 **Step 1** - Using an existing account or registering a new one
 
- - Navigate to https://sandbox.api.auth.asliri.id/
+ - Navigate to https://sandbox-apse1.api.loginid.io
  - Enter your username and organization id for an existing account or select the **"Sign Up"** option and create a new account.
  - Hit the **"Login"** or **"Register"** button
 
@@ -78,7 +127,7 @@ To obtain the client keys you will need to perform the following steps:
 
 **Step 3** - Enter the integration dashboard
 
-Once you have access to the Asliri dashboard, use the navigation bar to select **"Integrations"** option or press the **"Add Integration"** button.
+Once you have access to the LoginID dashboard, use the navigation bar to select **"Integrations"** option or press the **"Add Integration"** button.
 
 **Step 4** - Sign the Customer License Agreement
 
@@ -97,40 +146,3 @@ Once you have access to the Asliri dashboard, use the navigation bar to select *
 LOGIN_APPID=your.application.id
 LOGIN_APPSECRET=your.application.secret
 ```
-
-## Running the project
-
-#### Requirements
-
-- `PHP 7.2.5+`
-- `sqlite database` (see the following step)
-
-#### Clone this repository and go to your cloned folder
-```
-$ cd asliri-php-lumen-integration
-```
-
-#### Create a new sqlite database in `database` folder.
-
-```
-$ touch database/database.sqlite
-```
-
-#### Installing dependencies
-
-```
-$ composer install
-```
-
-#### Execute the migrate Artisan command
-
-```
-$ php artisan migrate
-```
-
-#### Execute the project
-
-```
-$ php -S php.integration.localhost:8000 -t public
-```
-
